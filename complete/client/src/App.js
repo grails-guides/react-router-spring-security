@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import {Route, Switch, Redirect} from 'react-router-dom';
 import Garage from './garage';
 import Auth from './security/Auth';
 import Login from './security/Login';
+import Logout from './security/Logout';
 import {Grid} from 'react-bootstrap';
 import {SERVER_URL} from './config';
 import {defaultErrorHandler} from './handlers/errorHandlers';
@@ -23,9 +25,13 @@ class App extends Component {
     }
 
     /** LifeCycle methods ------------------------------------------------------------------------------------------- */
+    componentWillMount() {
+        this.reset();
+    }
+
     componentDidMount() {
         if (Auth.loggedIn()) {
-            this.setState({route: 'garage'})
+            this.setState({route: 'garage'});
         }
     }
     /** ------------------------------------------------------------------------------------------------------------- */
@@ -78,39 +84,30 @@ class App extends Component {
         this.setState({error: error.message});
     };
 
-    logoutHandler= () => {
-        Auth.logOut();
+    logoutHandler = () => {
         this.reset();
     };
 
-    contentForRoute() {
-        const {error, user, route} = this.state
-        console.log('contentForRoute: ' + route);
-        switch (route) {
-            case 'login':
-                return <Login error={error}
-                              user={user}
-                              changeHandler={this.inputChangeHandler}
-                              onSubmit={this.login} />;
-            case 'garage':
-                return <Garage logoutHandler={this.logoutHandler}/>;
-            default:
-                return <Login error={error}
-                              user={user}
-                              changeHandler={this.inputChangeHandler}
-                              onSubmit={this.login}/>;
-        }
-    };
-
     render() {
-        const content = this.contentForRoute();
+        const {error, user} = this.state;
 
         return (
             <Grid>
-                {content}
+            <Switch>
+                <Route path="/login" render={() => <Login error={error}
+                                                       user={user}
+                                                       changeHandler={this.inputChangeHandler}
+                                                       onSubmit={this.login} />} />
+                <Route path="/logout" component={Logout} />
+                <Route exact path="/" render={() => Auth.loggedIn() ? <Redirect to="/garage" /> : <Login error={error}
+                                                                                                   user={user}
+                                                                                                   changeHandler={this.inputChangeHandler}
+                                                                                                   onSubmit={this.login} />} />
+                <Route path="/garage" component={() => <Garage logoutHandler={this.logoutHandler}/>}/>
+            </Switch>
             </Grid>
         );
-    };
+    }
 }
 
 export default App;

@@ -1,0 +1,11 @@
+In order to make use of client-side routing library we will use the react-router package. Install
+these packages in the project by adding the following lines to the `client/package.json`
+
+[source, json]
+.client/package.json
+----
+include::{sourceDir}/client/package.json[indent=0,lines=13..14]
+----
+
+NOTE: Please see the documentation for more information on the
+https://reacttraining.com/react-router/[react-router package]

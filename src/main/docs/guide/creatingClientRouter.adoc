@@ -1,0 +1,15 @@
+Next we add the router to our project. First we add the necessary imports.
+
+[source, javascript]
+.client/src/index.js
+----
+include::{sourceDir}/client/src/index.js[indent=0,lines=4..5]
+----
+
+Following the imports we need to wrap our `<App />` object with the router.
+
+[source, javascript]
+.client/src/index.js
+----
+include::{sourceDir}/client/src/index.js[indent=0,lines=10..14]
+----

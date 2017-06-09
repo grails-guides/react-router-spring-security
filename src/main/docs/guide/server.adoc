@@ -1,0 +1,1 @@
+For this guide we are lucky and there are no server side changes.

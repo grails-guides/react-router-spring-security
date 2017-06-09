@@ -3,5 +3,3 @@ previous guide React with Spring Security.
 
 NOTE: The previous guide focused on understanding the relationship between React and Spring Security,
 this will demonstrate a slightly more real world example of how everything works together.
-
-NOTE: Please see the documentation for more information on the https://reacttraining.com/react-router/[react-router package]

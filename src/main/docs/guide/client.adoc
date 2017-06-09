@@ -1,0 +1,5 @@
+Since this guide is all about client-side routing we will be focusing on the client.
+
+WARNING: It is important to note when working with React and Grails using #/ routing for client-side
+routing is required. If #/ routes are not used your routes will attempt to contact the server rather
+than the desired client side route.
