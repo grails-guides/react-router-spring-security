@@ -1,7 +1,7 @@
 import React, {Component}  from 'react';
 import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom'
-import Auth from './security/Auth';
+import Auth from './security/auth';
 
 class Logout extends Component {
 

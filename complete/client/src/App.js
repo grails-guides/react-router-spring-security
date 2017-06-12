@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
-import Garage from './garage';
-import Auth from './security/Auth';
+import Garage from './Garage';
+import Auth from './security/auth';
 import Login from './Login';
 import Logout from './Logout';
 import {Grid} from 'react-bootstrap';
