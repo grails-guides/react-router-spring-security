@@ -1,0 +1,13 @@
+After adding in our logout component we will now update `Garage.js` to make use of the new logout
+functionality.
+
+[source, javascript]
+.client/src/Garage.js
+----
+include::{sourceDir}/client/src/Garage.js[indent=0,lines=77..77]
+----
+
+This change might be a bit hard to see as it is such a simple change but we have added an
+`href="#/logout"` to our button.
+
+WARNING: The `href` needs to be set with a leading '#/' otherwise routing will not occur properly.

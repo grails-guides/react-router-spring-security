@@ -6,19 +6,15 @@ import 'whatwg-fetch';
 export default {
     subscribers: new Set(),
 
-    logIn(auth) { //<1>
+    logIn(auth) {
         localStorage.auth = JSON.stringify(auth);
-        this.onAuth(true);
+        this.onAuth(true); //<1>
     },
 
-    logOut() { //<2>
+    logOut() {
         delete localStorage.auth;
-        this.onAuth(false);
+        this.onAuth(false); //<2>
     },
-
-    // loggedIn() {  //<3>
-    //     return !!localStorage.auth;
-    // },
 
     loggedIn() {  //<3>
       return localStorage.auth && fetch(`${SERVER_URL}/api/vehicle`, {headers: headers()})
@@ -29,7 +25,7 @@ export default {
 
     sub(component) {
         this.subscribers.add(component);
-        component.onAuth(this.loggedIn());
+        component.onAuth(this.loggedIn()); //<1>
     },
 
     unsub(component) {

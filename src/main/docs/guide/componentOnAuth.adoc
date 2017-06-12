@@ -1,0 +1,18 @@
+Once we have completed cleaning up our example we will then add the `onAuth` method. This is of
+special note as this is what allows some black magic to happen.
+
+[source, javascript]
+.client/src/App.js
+----
+include::{sourceDir}/client/src/App.js[indent=0,lines=47..51]
+----
+
+As the above method is called during `componentWillMount` when `Auth.sub(this)` is executed.
+
+[source, javascript]
+.client/src/security/auth.js
+----
+include::{sourceDir}/client/src/security/auth.js[indent=0,lines=26..29]
+----
+<1> The passed in `this` is the App Component, thusly when `component.onAuth` is called is actually
+calling the `onAuth` method of `App`.

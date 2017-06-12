@@ -1,0 +1,11 @@
+Now we will add a slightly more complex logout than we used in our previous guide.
+
+[source, javascript]
+.client/src/Logout.js
+----
+include::{sourceDir}/client/src/Logout.js[indent=0]
+----
+
+<1> This is executed when we route to `/logout` and replaces the call to `Auth.logOut()` that was
+previously in `logoutHandler` in `App.js`
+<2> Checks if we are still logged in and if we are redirects us back to our main page.

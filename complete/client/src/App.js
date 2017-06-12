@@ -11,38 +11,19 @@ import {checkResponseStatus, loginResponseHandler} from './handlers/responseHand
 
 class App extends Component {
 
-  constructor() {
-    super();
+    constructor() {
+        super();
 
-    this.state = {
-      userDetails: {
-        username: '',
-        password: ''
-      },
-      route: '',
-      error: null
+        this.state = {
+            userDetails: {
+                username: '',
+                password: ''
+            },
+            error: null
+        }
     }
-  }
 
-  /** LifeCycle methods ------------------------------------------------------------------------------------------- */
-  // componentDidMount() {
-  //   console.log('app mounting...');
-  //
-  //   (async () => {
-  //     if (await Auth.loggedIn()) {
-  //       this.setState({route: 'garage'})
-  //     } else {
-  //       this.setState({route: 'login'});
-  //     }
-  //   })();
-  // }
-  //
-  // componentDidUpdate() {
-  //   if (this.state.route !== 'login' && !Auth.loggedIn()) {
-  //     this.setState({route: 'login'})
-  //   }
-  // }
-
+    /** LifeCycle methods ------------------------------------------------------------------------------------------- */
     componentWillMount() {
         Auth.sub(this);
     }
@@ -50,18 +31,18 @@ class App extends Component {
     componentWillUnmount() {
         Auth.unsub(this);
     }
-  /** ------------------------------------------------------------------------------------------------------------- */
 
-  reset = () => {
-    this.setState({
-      userDetails: {
-        username: '',
-        password: ''
-      },
-      route: 'login',
-      error: null
-    });
-  };
+    /** ------------------------------------------------------------------------------------------------------------- */
+
+    reset = () => {
+        this.setState({
+            userDetails: {
+                username: '',
+                password: ''
+            },
+            error: null
+        });
+    };
 
     onAuth = (loggedIn) => {
         this.setState({
@@ -69,91 +50,60 @@ class App extends Component {
         });
     };
 
-  login = (e) => {
-    console.log('login');
-    e.preventDefault(); //<1>
+    login = (e) => {
+        console.log('login');
+        e.preventDefault();
 
-    fetch(`${SERVER_URL}/api/login`, { //<2>
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state.userDetails)
-    }).then(checkResponseStatus) //<3>
-      .then(loginResponseHandler) //<4>
-      .catch(error => defaultErrorHandler(error, this.customErrorHandler)); //<5>
-  };
+        fetch(`${SERVER_URL}/api/login`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state.userDetails)
+        }).then(checkResponseStatus)
+            .then(loginResponseHandler) //<1>
+            .catch(error => defaultErrorHandler(error, this.customErrorHandler));
+    };
 
-  inputChangeHandler = (event) => {
-    let {userDetails} = this.state;
-    const target = event.target;
+    inputChangeHandler = (event) => {
+        let {userDetails} = this.state;
+        const target = event.target;
 
-    userDetails[target.name] = target.value;
+        userDetails[target.name] = target.value;
 
-    this.setState({userDetails});
-  };
+        this.setState({userDetails});
+    };
 
-  customLoginHandler = () => { //<1>
-    this.setState({route: 'garage'});
-  };
+    customErrorHandler = (error) => { //<2>
+        this.reset();
+        this.setState({error: error.message});
+    };
 
-  customErrorHandler = (error) => { //<2>
-    this.reset();
-    this.setState({error: error.message});
-  };
-
-  logoutHandler = () => {
-    this.reset();
-  };
-
-  contentForRoute() {
-    const {error, userDetails, route} = this.state;
-
-    const loginContent = <Login error={error}
-                                userDetails={userDetails}
-                                inputChangeHandler={this.inputChangeHandler}
-                                onSubmit={this.login}/>;
-
-    const garageContent = <Garage logoutHandler={this.logoutHandler}/>;
-
-    switch (route) {
-      case 'login':
-        return loginContent;
-      case 'garage':
-        return garageContent;
-      default:
-        return <p>Loading...</p>;
-    }
-  };
-
-  // render() {
-  //   const content = this.contentForRoute();
-  //
-  //   return (
-  //     <Grid>
-  //       {content}
-  //     </Grid>
-  //   );
-  // };
+    logoutHandler = () => {
+        this.reset();
+    };
 
     render() {
         const {error, userDetails} = this.state;
 
         return (
             <Grid>
-              <Switch>
-                <Route path="/login" render={() => <Login error={error}
-                                                          userDetails={userDetails}
-                                                          inputChangeHandler={this.inputChangeHandler}
-                                                          onSubmit={this.login} />} />
-                <Route path="/logout" component={Logout} />
-                <Route exact path="/" render={() => Auth.loggedIn() ? <Redirect to="/garage" /> : <Login error={error}
-                                                                                                         userDetails={userDetails}
-                                                                                                         inputChangeHandler={this.inputChangeHandler}
-                                                                                                         onSubmit={this.login} />} />
-                <Route path="/garage" component={() => <Garage logoutHandler={this.logoutHandler}/>}/>
-              </Switch>
+                <Switch>
+                    <Route path="/login" render={() => <Login error={error} //<2>
+                                                              userDetails={userDetails}
+                                                              inputChangeHandler={this.inputChangeHandler}
+                                                              onSubmit={this.login}/>}/>
+                    <Route path="/logout" component={Logout} //<1>
+                    />
+                    <Route exact path="/"
+                           render={() => Auth.loggedIn() ? <Redirect to="/garage"/> : <Login error={error} //<3>
+                                                                                             userDetails={userDetails}
+                                                                                             inputChangeHandler={this.inputChangeHandler}
+                                                                                             onSubmit={this.login}/>}/>
+                    <Route path="/garage" component={() => <Garage logoutHandler={this.logoutHandler}/>} //<4>
+                    />
+                </Switch>
             </Grid>
         );
     }

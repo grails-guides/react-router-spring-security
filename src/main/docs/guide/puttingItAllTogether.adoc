@@ -1,0 +1,10 @@
+Now we can finally wire these pieces together in order to get our client-side security functioning
+with our new router implementation. Here's the steps we need to take:
+
+* [ ] Update our `App` component's state and remove the `route` value (additionally remove `route` from functions).
+* [ ] Remove `componentDidMount()` and `componentDidUpdate()` methods.
+* [ ] Remove `contentForRoute()`.
+* [ ] Simplify `loginResponseHandler`.
+* [ ] Simplify `logoutHandler`.
+* [ ] Add `componentWillMount()` and `componentWillUpdate()` methods.
+* [ ] Update render and add new routes.

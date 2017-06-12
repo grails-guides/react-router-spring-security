@@ -1,0 +1,4 @@
+At this point you should have a fully functioning client-side routing architecture in place that is leveraging
+the `react-router` package (v4). This should give you a reasonable real world example of what many
+client-side routing architectures look like. Now if you are not already running the app, go back to <<runningTheApp>>
+in order to execute the app and test the router.

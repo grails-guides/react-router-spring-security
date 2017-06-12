@@ -1,0 +1,27 @@
+Now that all the other pieces are in place we add in the actual routing. The actual routing takes
+place inside our render method so we will delete everything that was previously inside our return.
+Then we will add back our `<Grid>` tag to keep things as close to the previous example as possible,
+followed by adding the `<Switch>` tag which will be the container for our routes.
+
+NOTE: We are exporting some state variables for simplicity. `const {error, userDetails} = this.state;`
+
+[source, javascript]
+.client/src/App.js
+----
+include::{sourceDir}/client/src/App.js[indent=0,lines=87..107]
+----
+
+<1> Looking at our route for `logout` first: This is a simple base case of routing where we can
+just declare the path and the component as logout does not require that we pass anything additional
+to it in order for it to function correctly.
+
+<2> Next we look at our route for `login`: This route is more complex as we need to be able to pass
+ in additional variables and methods to our component. In this case we declare our route with the
+ path and a render statement. The allows us to declare login in its component form so we can pass in
+ additional values and functions.
+
+<3> Finally handling our login redirection. This works like the above number 2. but in the render
+we are using a ternary in order to check if the app is logged in. If it is logged in we redirect to 4.
+ our `garage` component, if not we re-render the login component.
+
+<4> Our Garage component takes our logoutHandler in order to reset the login form state.

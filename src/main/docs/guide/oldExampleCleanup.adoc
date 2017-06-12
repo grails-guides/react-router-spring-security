@@ -1,0 +1,48 @@
+We will remove a number of features we used in our previous example and will start by
+removing the `route` variable from our state and `reset()` function.
+
+[source, javascript]
+.client/src/App.js
+----
+include::{sourceDir}/client/src/App.js[indent=0,lines=17..23]
+----
+
+[source, javascript]
+.client/src/App.js
+----
+include::{sourceDir}/client/src/App.js[indent=0,lines=37..45]
+----
+
+After removing the `route` variable we also delete both `componentDidMount()` and
+`componentDidUpdate()` methods and replace them with the following.
+
+[source, javascript]
+.client/src/App.js
+----
+include::{sourceDir}/client/src/App.js[indent=0,lines=27..33]
+----
+Our updated calls to `Auth.sub(this)` and `Auth.unsub(this)` are used to keep track of which components are
+logged in.
+
+
+Next we delete both `contentForRoute()` and `customSuccessHandler`, we then simplify our login
+method as it is no longer necessary to pass in a custom handler.
+
+[source, javascript]
+.client/src/App.js
+----
+include::{sourceDir}/client/src/App.js[indent=0,lines=53..67]
+----
+
+<1> Login can now just take our plain `loginResponseHandler` as no additional logic is required.
+
+Lastly we remove `Auth.logOut()` from our `logoutHandler` as this is now handled by our `Logout`
+component <<addingLogout>>.
+
+[source, javascript]
+.client/src/App.js
+----
+include::{sourceDir}/client/src/App.js[indent=0,lines=83..85]
+----
+
+NOTE: Our `logoutHandler` is still required in order to reset our login form.

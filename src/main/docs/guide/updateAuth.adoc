@@ -1,0 +1,36 @@
+After the router has been added we will update our auth object with a couple of additional actions.
+
+There are several changes to `auth.js` first of which is adding a `subscribers` variable to maintain
+a set of components that are using authentication.
+
+[source, javascript]
+.client/src/security/auth.js
+----
+include::{sourceDir}/client/src/security/auth.js[indent=0,lines=7..7]
+----
+
+After adding our `subscribers`, we add three additional functions.
+
+[source, javascript]
+.client/src/security/auth.js
+----
+include::{sourceDir}/client/src/security/auth.js[indent=0,lines=26..39]
+----
+<1> This is calling the COMPONENT `onAuth` method <<componentOnAuth>>, not the `onAuth` we just added to our auth object.
+
+Finally we update our existing login and logout methods by adding the following.
+
+[source, javascript]
+.client/src/security/auth.js
+----
+include::{sourceDir}/client/src/security/auth.js[indent=0,lines=9..11]
+----
+
+[source, javascript]
+.client/src/security/auth.js
+----
+include::{sourceDir}/client/src/security/auth.js[indent=0,lines=14..17]
+----
+
+<1> This uses our auth objects local `onAuth` method to set logged in status for subscribed components.
+<2> This uses our auth objects local `onAuth` method to set logged off status for subscribed components.

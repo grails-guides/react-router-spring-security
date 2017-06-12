@@ -12,3 +12,14 @@ client:
   title: Client Updates
   installingReactRouter: Installing React Router
   creatingClientRouter: Add the router
+  updateAuth: Update Auth
+  addingLogout: Adding Logout Component
+  updatingGarage: Using new Logout
+puttingItAllTogether:
+  title: Putting It All Together
+  oldExampleCleanup: Cleaning up our previous example
+  componentOnAuth: onAuth
+  routing: Routing, Finally!!!
+  thatsIt: Thats it..., go test your router
+helpWithGrails:
+  title: Do you need help with Grails?
