@@ -1,4 +1,4 @@
-import Auth from '../security/auth';
+import Auth from '../security/Auth';
 
 //<1>
 export const checkResponseStatus = (response) => {
