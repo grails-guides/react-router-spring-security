@@ -26,7 +26,7 @@ export default {
           .then(() => { return true })
           .catch(() => { return false });
     },
-    
+
     sub(component) {
         this.subscribers.add(component);
         component.onAuth(this.loggedIn());
