@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Route, Switch, Redirect} from 'react-router-dom';
-import Garage from './garage';
-import Auth from './security/Auth';
-import Login from './security/Login';
-import Logout from './security/Logout';
+import Garage from './Garage';
+import Auth from './security/auth';
+import Login from './Login';
+import Logout from './Logout';
 import {Grid} from 'react-bootstrap';
 import {SERVER_URL} from './config';
 import {defaultErrorHandler} from './handlers/errorHandlers';
@@ -11,100 +11,149 @@ import {checkResponseStatus, loginResponseHandler} from './handlers/responseHand
 
 class App extends Component {
 
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.state = {
-            user: {
-                username: '',
-                password: ''
-            },
-            route: 'login',
-            error: null
-        }
+    this.state = {
+      userDetails: {
+        username: '',
+        password: ''
+      },
+      route: '',
+      error: null
     }
+  }
 
-    /** LifeCycle methods ------------------------------------------------------------------------------------------- */
+  /** LifeCycle methods ------------------------------------------------------------------------------------------- */
+  // componentDidMount() {
+  //   console.log('app mounting...');
+  //
+  //   (async () => {
+  //     if (await Auth.loggedIn()) {
+  //       this.setState({route: 'garage'})
+  //     } else {
+  //       this.setState({route: 'login'});
+  //     }
+  //   })();
+  // }
+  //
+  // componentDidUpdate() {
+  //   if (this.state.route !== 'login' && !Auth.loggedIn()) {
+  //     this.setState({route: 'login'})
+  //   }
+  // }
+
     componentWillMount() {
-        this.reset();
+        Auth.sub(this);
     }
 
-    componentDidMount() {
-        if (Auth.loggedIn()) {
-            this.setState({route: 'garage'});
-        }
+    componentWillUnmount() {
+        Auth.unsub(this);
     }
-    /** ------------------------------------------------------------------------------------------------------------- */
+  /** ------------------------------------------------------------------------------------------------------------- */
 
-    reset = () => {
+  reset = () => {
+    this.setState({
+      userDetails: {
+        username: '',
+        password: ''
+      },
+      route: 'login',
+      error: null
+    });
+  };
+
+    onAuth = (loggedIn) => {
         this.setState({
-            user: {
-                username: '',
-                password: ''
-            },
-            route: 'login',
-            error: null
+            loggedIn: loggedIn
         });
     };
 
-    login = (e) => {
-        console.log('App:login');
-        // This line is needed or the error doesn't display and it will not authenticate
-        e.preventDefault(); //<1>
+  login = (e) => {
+    console.log('login');
+    e.preventDefault(); //<1>
 
-        fetch(`${SERVER_URL}/api/login`, { //<2>
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(this.state.user)
-        }).then(checkResponseStatus) //<3>
-          .then(response => loginResponseHandler(response, this.customLoginHandler)) //<4>
-          .catch(error => defaultErrorHandler(error, this.customErrorHandler)); //<5>
-        console.log('END App:login');
-    };
+    fetch(`${SERVER_URL}/api/login`, { //<2>
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.userDetails)
+    }).then(checkResponseStatus) //<3>
+      .then(loginResponseHandler) //<4>
+      .catch(error => defaultErrorHandler(error, this.customErrorHandler)); //<5>
+  };
 
-    inputChangeHandler = (event) => {
-        let {user} = this.state;
-        const target = event.target;
+  inputChangeHandler = (event) => {
+    let {userDetails} = this.state;
+    const target = event.target;
 
-        user[target.name] = target.value;
+    userDetails[target.name] = target.value;
 
-        this.setState({user});
-    };
+    this.setState({userDetails});
+  };
 
-    customLoginHandler = () => { //<1>
-        console.log('customLoginHandler');
-        this.setState({route: 'garage'});
-    };
+  customLoginHandler = () => { //<1>
+    this.setState({route: 'garage'});
+  };
 
-    customErrorHandler = (error) => { //<2>
-        this.reset();
-        this.setState({error: error.message});
-    };
+  customErrorHandler = (error) => { //<2>
+    this.reset();
+    this.setState({error: error.message});
+  };
 
-    logoutHandler = () => {
-        this.reset();
-    };
+  logoutHandler = () => {
+    this.reset();
+  };
+
+  contentForRoute() {
+    const {error, userDetails, route} = this.state;
+
+    const loginContent = <Login error={error}
+                                userDetails={userDetails}
+                                inputChangeHandler={this.inputChangeHandler}
+                                onSubmit={this.login}/>;
+
+    const garageContent = <Garage logoutHandler={this.logoutHandler}/>;
+
+    switch (route) {
+      case 'login':
+        return loginContent;
+      case 'garage':
+        return garageContent;
+      default:
+        return <p>Loading...</p>;
+    }
+  };
+
+  // render() {
+  //   const content = this.contentForRoute();
+  //
+  //   return (
+  //     <Grid>
+  //       {content}
+  //     </Grid>
+  //   );
+  // };
 
     render() {
-        const {error, user} = this.state;
+        const {error, userDetails} = this.state;
 
         return (
             <Grid>
-            <Switch>
+              <Switch>
                 <Route path="/login" render={() => <Login error={error}
-                                                       user={user}
-                                                       changeHandler={this.inputChangeHandler}
-                                                       onSubmit={this.login} />} />
+                                                          userDetails={userDetails}
+                                                          inputChangeHandler={this.inputChangeHandler}
+                                                          onSubmit={this.login} />} />
                 <Route path="/logout" component={Logout} />
                 <Route exact path="/" render={() => Auth.loggedIn() ? <Redirect to="/garage" /> : <Login error={error}
-                                                                                                   user={user}
-                                                                                                   changeHandler={this.inputChangeHandler}
-                                                                                                   onSubmit={this.login} />} />
+                                                                                                         userDetails={userDetails}
+                                                                                                         inputChangeHandler={this.inputChangeHandler}
+                                                                                                         onSubmit={this.login} />} />
                 <Route path="/garage" component={() => <Garage logoutHandler={this.logoutHandler}/>}/>
-            </Switch>
+              </Switch>
             </Grid>
         );
     }

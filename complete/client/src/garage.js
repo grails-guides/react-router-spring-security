@@ -1,8 +1,9 @@
 import React from 'react';
-import Vehicles from './vehicles';
+import Vehicles from './Vehicles';
 import AddVehicleForm from './AddVehicleForm';
 import { Row, Jumbotron, Button } from 'react-bootstrap';
 import { SERVER_URL } from './config';
+import headers from './security/headers';
 import 'whatwg-fetch';
 
 class Garage extends React.Component {
@@ -19,14 +20,9 @@ class Garage extends React.Component {
   }
 
   componentDidMount() {
-      console.log('Garage:componentDidMount');
-      console.log(localStorage.auth);
       fetch(`${SERVER_URL}/api/vehicle`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : 'Bearer ' + JSON.parse(localStorage.auth).access_token //<1>
-        },
+        headers: headers(), //<1>
       })
       .then(r => r.json())
       .then(json => this.setState({vehicles: json}))
@@ -34,10 +30,7 @@ class Garage extends React.Component {
 
       fetch(`${SERVER_URL}/api/make`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : 'Bearer ' + JSON.parse(localStorage.auth).access_token //<2>
-        },
+        headers: headers() //<1>
       })
       .then(r => r.json())
       .then(json => this.setState({makes: json}))
@@ -45,10 +38,7 @@ class Garage extends React.Component {
 
       fetch(`${SERVER_URL}/api/model`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : 'Bearer ' + JSON.parse(localStorage.auth).access_token //<3>
-        },
+        headers: headers() //<1>
     })
       .then(r => r.json())
       .then(json => this.setState({models: json}))
@@ -56,25 +46,17 @@ class Garage extends React.Component {
 
     fetch(`${SERVER_URL}/api/driver`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : 'Bearer ' + JSON.parse(localStorage.auth).access_token //<4>
-        },
+        headers: headers() //<1>
     })
       .then(r => r.json())
       .then(json => this.setState({drivers: json}))
       .catch(error => console.error('Error retrieving drivers: ' + error));
-
   }
 
   submitNewVehicle = (vehicle) => {
-    console.log('submitNewVehicle...');
     fetch(`${SERVER_URL}/api/vehicle`, {
       method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization' : 'Bearer ' + JSON.parse(localStorage.auth).access_token //<5>
-        },
+      headers: headers(), //<1>
       body: JSON.stringify(vehicle)
     }).then(r => r.json())
       .then(json => {
@@ -85,14 +67,14 @@ class Garage extends React.Component {
       .catch(ex => console.error('Unable to save vehicle', ex));
   };
 
+
   render() {
     const {vehicles, makes, models, drivers} = this.state;
 
     return <Row>
       <Jumbotron>
         <h1>Welcome to the Garage</h1>
-        <Button href="#/logout" onClick={this.props.logoutHandler} >Log Out</Button>
-
+        <Button bsStyle="warning" className="pull-right" href="#/logout" onClick={this.props.logoutHandler} >Log Out</Button>
       </Jumbotron>
       <Row>
         <AddVehicleForm onSubmit={this.submitNewVehicle} makes={makes} models={models} drivers={drivers}/>

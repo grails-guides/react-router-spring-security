@@ -1,8 +1,13 @@
 import React, {Component}  from 'react';
+import PropTypes from 'prop-types';
 import {Redirect} from 'react-router-dom'
-import Auth from './Auth';
+import Auth from './security/auth';
 
 class Logout extends Component {
+
+    static contextTypes = {
+        router: PropTypes.object.isRequired
+    };
 
     componentDidMount() {
         console.log('Logging Out ...');
